@@ -1,8 +1,8 @@
-# Parcial 1 Summary — Automatic Fruit Classification using Computer Vision
+# Parcial 1 Summary - Automatic Fruit Classification using Computer Vision
 
 ## 1. Project Overview
 
-This project prepares a fruit image dataset for multiclass image classification using Computer Vision. The goal is to build an organized, validated, and preprocessed dataset that can support a classification model in future course stages.
+This project prepares a fruit image dataset for multiclass image classification using Computer Vision. The goal is to build an organized, validated, and preprocessed dataset that can support future Computer Vision classification work.
 
 ## 2. Parcial 1 Objective
 
@@ -37,8 +37,8 @@ Sample images were visualized for each class during EDA.
 
 | Metric | Result |
 |---|---|
-| Largest class | Apple (2000 images) |
-| Smallest class | Apple (2000 images) |
+| Largest class | All classes tied (2000 images each) |
+| Smallest class | All classes tied (2000 images each) |
 | Imbalance ratio | 1.0x |
 | Balance status | BALANCED |
 
@@ -64,7 +64,7 @@ No corrupted or unreadable images were found.
 | Resize errors | 0 |
 | Resize verification | Passed |
 
-All images were standardized to 224x224 pixels for compatibility with future transfer learning models.
+All images were standardized to 224x224 pixels for future Computer Vision classification work.
 
 ## 8. Dataset Split
 
@@ -77,7 +77,7 @@ Split ratios: 70% train / 15% validation / 15% test (random seed = 42)
 | Test | 1505 | 15.05% |
 | **Total** | **10000** | **100.0%** |
 
-The small difference from exact ratios is expected because `train_test_split` performs integer splitting per class (2000 images → 1399 train / 300 val / 301 test).
+The small difference from exact ratios is expected because `train_test_split` performs integer splitting per class (2000 images -> 1399 train / 300 val / 301 test).
 
 ### Images per class per subset
 
@@ -98,5 +98,5 @@ Split verification: Passed. Class distribution is preserved across all subsets.
 - The dataset is perfectly balanced with an imbalance ratio of 1.0x.
 - No corrupted or unreadable images were found in the dataset.
 - All 10,000 images were successfully resized to 224x224 pixels with zero errors.
-- The dataset was split into train, validation, and test subsets preserving class distribution.
-- The dataset is fully prepared and ready for model training in the next course stage.
+- The dataset was split into train, validation, and test subsets while preserving class distribution.
+- The dataset is organized, validated, preprocessed, and ready for the next course stage.

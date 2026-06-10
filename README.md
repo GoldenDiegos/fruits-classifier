@@ -164,17 +164,13 @@ The dataset has an equal number of images across all five classes.
 
 ## Conclusions
 
-This section will be completed after running the exploratory data analysis and preprocessing notebook.
+The exploratory data analysis confirmed that the dataset contains 10,000 images distributed equally across 5 fruit classes, with 2,000 images per class.
 
-The final conclusions will summarize:
+The class balance analysis showed that the dataset is balanced, with an imbalance ratio of 1.0x. No corrupted or unreadable images were found during the image quality verification step.
 
-- The total number of images.
-- The number of images per class.
-- Whether the dataset is balanced or imbalanced.
-- The result of corrupted image verification.
-- The preprocessing steps applied.
-- The final train, validation, and test split.
-- The readiness of the dataset for the next course stage.
+All images were converted to RGB format and resized successfully to 224x224 pixels. The final dataset split was verified with 6,995 images for train, 1,500 for validation, and 1,505 for test.
+
+The dataset is organized, validated, preprocessed, and ready for the next course stage.
 
 ## Current Project Status
 
