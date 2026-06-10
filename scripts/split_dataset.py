@@ -28,7 +28,9 @@ def split_dataset():
         shutil.rmtree(SPLIT_DIR)
 
     for subset in ["train", "val", "test"]:
-        (SPLIT_DIR / subset).mkdir(parents=True, exist_ok=True)
+        subset_dir = SPLIT_DIR / subset
+        subset_dir.mkdir(parents=True, exist_ok=True)
+        (subset_dir / ".gitkeep").touch()
 
     total_train = total_val = total_test = 0
 
@@ -64,6 +66,11 @@ def split_dataset():
         print(f"  {class_name}: {len(train_files)} train / {len(val_files)} val / {len(test_files)} test")
 
     total = total_train + total_val + total_test
+
+    if total == 0:
+        print("\nERROR: No images were split.")
+        return
+
     print(f"\nSplit complete.")
     print(f"  Train : {total_train} ({100 * total_train / total:.2f}%)")
     print(f"  Val   : {total_val} ({100 * total_val / total:.2f}%)")
