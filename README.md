@@ -141,30 +141,26 @@ The split is performed per class to preserve the class distribution across all s
 
 ## EDA Results
 
-This section will be completed after running the Google Colab notebook.
-
 | Metric | Result |
 |---|---:|
-| Total images | Pending |
+| Total images | 10000 |
 | Number of classes | 5 |
-| Apples | Pending |
-| Bananas | Pending |
-| Grapes | Pending |
-| Mangoes | Pending |
-| Strawberries | Pending |
+| Apple | 2000 |
+| Banana | 2000 |
+| Grape | 2000 |
+| Mango | 2000 |
+| Strawberry | 2000 |
 
 ## Class Balance Analysis
 
-This section will be completed after calculating the number of images per class.
-
 | Metric | Result |
-|---|---:|
-| Largest class | Pending |
-| Smallest class | Pending |
-| Imbalance ratio | Pending |
-| Balance status | Pending |
+|---|---|
+| Largest class | All classes tied (2000 images each) |
+| Smallest class | All classes tied (2000 images each) |
+| Imbalance ratio | 1.0x |
+| Balance status | BALANCED |
 
-The goal is to determine whether the dataset is balanced, moderately imbalanced, or imbalanced.
+The dataset has an equal number of images across all five classes.
 
 ## Conclusions
 
@@ -182,9 +178,8 @@ The final conclusions will summarize:
 
 ## Current Project Status
 
-- Dataset selected.
-- Repository structure created.
-- README file updated for Parcial 1.
-- Google Colab EDA and preprocessing notebook available.
-- EDA results pending execution in Google Colab.
-- Final report pending.
+- EDA results obtained from Google Colab execution.
+- All images resized to 224x224 pixels successfully.
+- Dataset split verified: 6995 train / 1500 val / 1505 test.
+- Final report available in reports/parcial_1_summary.md.
+- Parcial 1 complete.
