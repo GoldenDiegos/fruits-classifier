@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.env/
+env/
+
+# Heavy data (do not upload to repo)
+data/raw/*
+data/processed/*
+data/split/*
+
+# Keep folder structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/split/train/.gitkeep
+!data/split/val/.gitkeep
+!data/split/test/.gitkeep
+
+# Trained models
+models/*
+!models/.gitkeep
+*.h5
+*.keras
+*.pkl
+*.pt
+*.pth
+
+# Kaggle credentials
+kaggle.json
+
+# Claude memory (local only)
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
