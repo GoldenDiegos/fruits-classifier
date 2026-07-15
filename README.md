@@ -1,5 +1,13 @@
 # Automatic Fruit Classification using Computer Vision
 
+**Institution:** Global University — Ciberseguridad y Desarrollo de Software
+
+**Course:** Inteligencia Artificial y Machine Learning
+
+**Team:** Hector Oropeza Pelcastre, Sharon Daniela Escobedo Davila, Diego David Lara Martínez
+
+**Professor:** Jorge Antonio Delgado Magallanes
+
 ## General Description
 
 This project focuses on preparing an image dataset for automatic fruit classification using Computer Vision.
