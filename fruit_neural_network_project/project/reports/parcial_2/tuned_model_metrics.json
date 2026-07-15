@@ -1,0 +1,25 @@
+{
+  "test_metrics": {
+    "accuracy": 0.6099667774086379,
+    "precision_macro": 0.6036751162420032,
+    "recall_macro": 0.6099667774086378,
+    "f1_macro": 0.599993178356913
+  },
+  "best_validation_loss": 1.0090443085034688,
+  "hyperparameters": {
+    "model_name": "fruit_cnn",
+    "activation": "leaky_relu",
+    "dropout_rate": 0.14881529393791154,
+    "base_channels": 32,
+    "learning_rate": 0.00020914981329035596,
+    "weight_decay": 9.565499215943819e-05,
+    "batch_size": 32
+  },
+  "class_names": [
+    "Apple",
+    "Banana",
+    "Grape",
+    "Mango",
+    "Strawberry"
+  ]
+}
