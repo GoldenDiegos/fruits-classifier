@@ -1,0 +1,13 @@
+model:
+  name: fruit_cnn
+  input_channels: 3
+  input_height: 224
+  input_width: 224
+  num_classes: 5
+  activation: relu
+  output_activation: softmax_for_inference_only
+
+regularization:
+  dropout_rate: 0.3
+  weight_decay: 0.0001
+  batch_normalization: true
