@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Train Fruit CNN",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--train-dir", "data/split/train",
+        "--val-dir", "data/split/val",
+        "--epochs", "5",
+        "--batch-size", "16",
+        "--model-name", "fruit_cnn"
+      ]
+    },
+    {
+      "name": "Run API",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "deployment.api:app",
+        "--reload",
+        "--host", "127.0.0.1",
+        "--port", "8000"
+      ],
+      "console": "integratedTerminal"
+    }
+  ]
+}
