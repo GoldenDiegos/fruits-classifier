@@ -1,0 +1,20 @@
+# NOTE: this file is documentation only — no code reads it. Training is driven
+# entirely through argparse (main.py / scripts/tune.py). expected_classes below
+# lists the folder names actually produced by notebooks/02_Training_Colab.ipynb
+# after downloading the real Kaggle dataset; update this list if that ever changes.
+data:
+  image_size: 224
+  channels: 3
+  expected_classes:
+    - Apples
+    - Bananas
+    - Grapes
+    - Mangoes
+    - Strawberries
+
+paths:
+  raw: data/raw
+  processed: data/processed
+  train: data/split/train
+  validation: data/split/val
+  test: data/split/test
