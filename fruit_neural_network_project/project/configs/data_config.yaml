@@ -6,11 +6,11 @@ data:
   image_size: 224
   channels: 3
   expected_classes:
-    - Apples
-    - Bananas
-    - Grapes
-    - Mangoes
-    - Strawberries
+    - Apple
+    - Banana
+    - Grape
+    - Mango
+    - Strawberry
 
 paths:
   raw: data/raw
