@@ -236,9 +236,28 @@ Hyperparameter search is implemented with Optuna (`training/tuning.py`, `scripts
 
 The final tuned model is serialized as `models/checkpoints/tuned_model.pt` via `torch.save`, containing the model's `state_dict` plus metadata: class names, architecture hyperparameters, the winning Optuna parameters, and final test metrics.
 
+## Parcial 2 Results
+
+Trained and fine-tuned on the real 10,000-image split via [`notebooks/02_Training_Colab.ipynb`](fruit_neural_network_project/project/notebooks/02_Training_Colab.ipynb) on Google Colab GPU. Full artifacts (metrics, curves, confusion matrices, Optuna trial log) are in [`fruit_neural_network_project/project/reports/parcial_2/`](fruit_neural_network_project/project/reports/parcial_2/).
+
+| Metric | Base Model | Tuned Model |
+|---|---:|---:|
+| Accuracy | 0.5429 | 0.6100 |
+| Precision (macro) | 0.5513 | 0.6037 |
+| Recall (macro) | 0.5429 | 0.6100 |
+| F1 (macro) | 0.5122 | 0.6000 |
+| Best validation loss | 1.0962 | 1.0090 |
+
+Winning hyperparameters (Optuna): `base_channels=32`, `activation=leaky_relu`, `learning_rate≈2.09e-4`, `dropout_rate≈0.149`, `weight_decay≈9.57e-5`, `batch_size=32`.
+
+The improvement is concentrated in the two classes the base model struggled with most: Apple recall went from 15% to 33%, and Mango recall from 37% to 68% (Banana and Grape recall dipped slightly as a capacity trade-off, Strawberry stayed ~85%).
+
+**Note:** this run used a reduced Optuna budget (5 trials / 5 search epochs / 10 final epochs) due to a time constraint during the training session. A fuller search (20 trials / 12 search epochs / 30 final epochs, the notebook's default) is expected to improve on these numbers further.
+
 ## Parcial 2 Status
 
 - Training, fine-tuning, and export pipeline implemented and covered by unit tests (`pytest`, all passing).
-- End-to-end smoke-tested locally on a synthetic dataset (CPU) to validate wiring.
-- Not yet executed on the real dataset — pending a full run in Google Colab with GPU via [`notebooks/02_Training_Colab.ipynb`](fruit_neural_network_project/project/notebooks/02_Training_Colab.ipynb).
-- Base vs. tuned model comparison and final exported checkpoint: Pending.
+- Executed end-to-end on the real dataset in Google Colab with GPU.
+- Base vs. tuned model comparison: complete (see table above and `reports/parcial_2/comparison_table.md`).
+- Final exported checkpoint: [`fruit_neural_network_project/project/models/checkpoints/tuned_model.pt`](fruit_neural_network_project/project/models/checkpoints/tuned_model.pt), containing the state dict plus metadata (class names, winning hyperparameters, Optuna best value, final test metrics).
+- A fuller Optuna search (more trials/epochs) is planned to replace the current reduced-budget results.
