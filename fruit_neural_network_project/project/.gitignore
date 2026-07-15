@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+*.pt
+*.pth
+mlruns/
+wandb/
+data/raw/
+data/processed/
+data/split/
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/split/.gitkeep
