@@ -10,11 +10,13 @@
 
 ## General Description
 
-This project focuses on preparing an image dataset for automatic fruit classification using Computer Vision.
+This project builds an automatic fruit classification system using Computer Vision, developed in two course stages.
 
-The repository corresponds to Parcial 1. This stage covers project definition, dataset selection, exploratory data analysis, image preprocessing, and dataset splitting.
+**Parcial 1** covers project definition, dataset selection, exploratory data analysis, image preprocessing, and dataset splitting.
 
-No model training, API development, fine-tuning, or deployment is included in this stage.
+**Parcial 2** covers building a Convolutional Neural Network from scratch, training it, reporting baseline metrics, fine-tuning hyperparameters, and exporting the final optimized model.
+
+API development and production deployment are not part of either stage.
 
 ## Problem Statement
 
@@ -77,17 +79,30 @@ fruit-classification-ai/
 |   |-- split_dataset.py
 |
 |-- data/
-    |-- raw/
-    |   |-- .gitkeep
-    |-- processed/
-    |   |-- .gitkeep
-    |-- split/
-        |-- train/
-        |   |-- .gitkeep
-        |-- val/
-        |   |-- .gitkeep
-        |-- test/
-            |-- .gitkeep
+|   |-- raw/
+|   |   |-- .gitkeep
+|   |-- processed/
+|   |   |-- .gitkeep
+|   |-- split/
+|       |-- train/
+|       |   |-- .gitkeep
+|       |-- val/
+|       |   |-- .gitkeep
+|       |-- test/
+|           |-- .gitkeep
+|
+|-- fruit_neural_network_project/
+    |-- project/                     # Parcial 2 — see below
+        |-- main.py
+        |-- models/
+        |-- training/
+        |-- evaluation/
+        |-- deployment/
+        |-- scripts/
+        |-- tests/
+        |-- configs/
+        `-- notebooks/
+            `-- 02_Training_Colab.ipynb
 ```
 
 ## Dataset Note
@@ -180,10 +195,50 @@ All images were converted to RGB format and resized successfully to 224x224 pixe
 
 The dataset is organized, validated, preprocessed, and ready for the next course stage.
 
-## Current Project Status
+## Parcial 1 Status
 
 - EDA results obtained from Google Colab execution.
 - All images resized to 224x224 pixels successfully.
 - Dataset split verified: 6995 train / 1500 val / 1505 test.
 - Final report available in reports/parcial_1_summary.md.
 - Parcial 1 complete.
+
+## Parcial 2 Objective
+
+The objective of Parcial 2 is to build a Convolutional Neural Network from scratch (no pretrained backbones), train it on the prepared dataset, report baseline metrics, improve those metrics through hyperparameter fine-tuning, and export the final optimized model.
+
+This stage lives in [`fruit_neural_network_project/project/`](fruit_neural_network_project/project/), a self-contained PyTorch project designed to run in Google Colab with GPU while keeping a clean, modular, testable codebase (`models/`, `training/`, `evaluation/`, `deployment/`, `tests/`).
+
+## Balancing and Preprocessing
+
+Parcial 1's EDA already confirmed the dataset is perfectly balanced (2,000 images per class, imbalance ratio 1.0x), so techniques such as SMOTE, undersampling, or oversampling do not apply. The balancing technique implemented instead is class weighting inside `CrossEntropyLoss` (`training/losses.py::compute_class_weights`), computed directly from the training split. Since the classes are equally represented, the resulting weights come out close to 1.0 for every class — evidence that the mechanism is correctly wired in and correctly diagnosed as unnecessary for this particular dataset.
+
+## Model Architecture
+
+`FruitCNN` (`models/fruit_cnn.py`) is built entirely from scratch using `Conv2d` / `BatchNorm2d` / activation / `MaxPool2d` / `Dropout2d` blocks followed by an adaptive average pool and a dense classifier head. It returns raw logits; Softmax is only applied at inference time. Activation function, dropout rate, and base channel width are all configurable and tunable.
+
+## Parcial 2 Process
+
+1. Verify class balance and implement class weighting as the balancing technique.
+2. Train `FruitCNN` from scratch on the real 10,000-image split.
+3. Evaluate the base model on the held-out test set: Accuracy, Precision, Recall, F1-Score.
+4. Plot and save train/validation loss and accuracy curves.
+5. Run an Optuna hyperparameter search (learning rate, dropout rate, weight decay, activation, base channels, batch size).
+6. Retrain with the winning configuration for the full epoch budget.
+7. Compare base vs. tuned metrics to confirm measurable improvement.
+8. Export the final tuned model as a `.pt` checkpoint with full metadata.
+
+## Fine-Tuning
+
+Hyperparameter search is implemented with Optuna (`training/tuning.py`, `scripts/tune.py`), minimizing validation loss across trials with a `TPESampler` and `MedianPruner`. Each trial is a short-budget run of the exact same training loop used for the base model, so the base run and the tuned retrain never drift apart.
+
+## Model Export
+
+The final tuned model is serialized as `models/checkpoints/tuned_model.pt` via `torch.save`, containing the model's `state_dict` plus metadata: class names, architecture hyperparameters, the winning Optuna parameters, and final test metrics.
+
+## Parcial 2 Status
+
+- Training, fine-tuning, and export pipeline implemented and covered by unit tests (`pytest`, all passing).
+- End-to-end smoke-tested locally on a synthetic dataset (CPU) to validate wiring.
+- Not yet executed on the real dataset — pending a full run in Google Colab with GPU via [`notebooks/02_Training_Colab.ipynb`](fruit_neural_network_project/project/notebooks/02_Training_Colab.ipynb).
+- Base vs. tuned model comparison and final exported checkpoint: Pending.
