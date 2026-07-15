@@ -1,0 +1,17 @@
+training:
+  epochs: 30
+  batch_size: 32
+  learning_rate: 0.0003
+  optimizer: adamw
+  loss_function: cross_entropy
+  early_stopping_patience: 5
+
+data_split:
+  train: 0.70
+  validation: 0.15
+  test: 0.15
+
+runtime:
+  device: auto
+  num_workers: 0
+  seed: 42
