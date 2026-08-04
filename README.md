@@ -261,3 +261,45 @@ The improvement is concentrated in the two classes the base model struggled with
 - Base vs. tuned model comparison: complete (see table above and `reports/parcial_2/comparison_table.md`).
 - Final exported checkpoint: [`fruit_neural_network_project/project/models/checkpoints/tuned_model.pt`](fruit_neural_network_project/project/models/checkpoints/tuned_model.pt), containing the state dict plus metadata (class names, winning hyperparameters, Optuna best value, final test metrics).
 - A fuller Optuna search (more trials/epochs) is planned to replace the current reduced-budget results.
+
+## Parcial 3 Objective
+
+The objective of Parcial 3 is to further improve accuracy using transfer learning (now allowed, unlike Parcial 2), build an applicable use case, and present the work from Parcial 2 and Parcial 3 together.
+
+## Transfer Learning
+
+`models/pretrained_resnet.py::build_resnet18` loads a ResNet18 pretrained on ImageNet and replaces its classifier head with a new `Linear` layer for the 5 fruit classes. Two configurations were trained and compared:
+- **Frozen backbone**: only the new classifier head is trained (`requires_grad=False` on every pretrained parameter).
+- **Fine-tuned (unfrozen backbone)**: the entire network is trained with a lower learning rate, letting the backbone adapt specifically to fruit images.
+
+Both reuse the exact same balancing (class weights), dataset split, and evaluation pipeline established in Parcial 2, for a fair comparison.
+
+## Parcial 3 Results
+
+Trained via [`notebooks/03_Transfer_Learning_and_Demo.ipynb`](fruit_neural_network_project/project/notebooks/03_Transfer_Learning_and_Demo.ipynb) on the same real 10,000-image split. Full artifacts are in [`fruit_neural_network_project/project/reports/parcial_3/`](fruit_neural_network_project/project/reports/parcial_3/).
+
+| Model | Accuracy | Precision (macro) | Recall (macro) | F1 (macro) |
+|---|---:|---:|---:|---:|
+| CNN Base (Parcial 2, from scratch) | 0.5429 | 0.5513 | 0.5429 | 0.5122 |
+| CNN Tuned (Parcial 2, Optuna) | 0.6100 | 0.6037 | 0.6100 | 0.6000 |
+| ResNet18 (frozen backbone) | 0.8445 | 0.8437 | 0.8445 | 0.8438 |
+| **ResNet18 (fine-tuned, unfrozen)** | **0.9143** | **0.9145** | **0.9143** | **0.9139** |
+
+The frozen-backbone run took ~6 minutes (15 epochs, no early stop) and already improved +23.5 points over the best Parcial 2 model. Unfreezing the backbone with a lower learning rate (`1e-4` vs. `1e-3`) pushed accuracy to 91.4% before early stopping triggered at epoch 7 (validation loss stopped improving after epoch 2, at which point training accuracy kept climbing — a sign of the model starting to overfit, correctly caught by `EarlyStopping`).
+
+## Applicable Use Case: Gradio Demo
+
+[`scripts/gradio_demo.py`](fruit_neural_network_project/project/scripts/gradio_demo.py) launches an interactive demo: upload a fruit photo, get back the predicted class and a per-class confidence breakdown. It reuses `FruitPredictor` (`deployment/inference.py`), which now reconstructs the exact model architecture from the checkpoint's own metadata — fixing a bug where it previously always assumed default architecture hyperparameters, which would have crashed loading `tuned_model.pt`. Run with `python scripts/gradio_demo.py --model-path models/checkpoints/resnet18_finetuned_model.pt --share` for a temporary public link (used from Colab in the demo notebook).
+
+Tested with a real photo (not from the training dataset) of two bananas on a blue surface: correctly classified as Banana with 65% confidence (Mango was the second guess at 26%, a reasonable confusion given similar shape/color).
+
+## Presentation
+
+Slide-by-slide content covering both Parcial 2 and Parcial 3 is in [`fruit_neural_network_project/project/reports/presentation_parcial2_3.md`](fruit_neural_network_project/project/reports/presentation_parcial2_3.md).
+
+## Parcial 3 Status
+
+- ResNet18 transfer learning (both frozen and fine-tuned) implemented, tested, and executed end-to-end on the real dataset in Google Colab with GPU.
+- Applicable use case (Gradio demo) implemented, tested locally against the existing `tuned_model.pt`, and verified with a real (non-dataset) photo during the Colab run.
+- Presentation content written with real results (no pending placeholders).
+- Final exported checkpoint: [`fruit_neural_network_project/project/models/checkpoints/resnet18_finetuned_model.pt`](fruit_neural_network_project/project/models/checkpoints/resnet18_finetuned_model.pt).
