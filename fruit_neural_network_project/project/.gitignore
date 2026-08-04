@@ -4,8 +4,9 @@ __pycache__/
 .env
 *.pt
 *.pth
-# Final deliverable model is committed for grading (delivery is Git-only)
+# Final deliverable models are committed for grading (delivery is Git-only)
 !models/checkpoints/tuned_model.pt
+!models/checkpoints/resnet18_finetuned_model.pt
 mlruns/
 wandb/
 data/raw/
