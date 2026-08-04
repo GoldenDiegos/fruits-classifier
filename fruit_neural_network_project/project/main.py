@@ -32,7 +32,7 @@ def parse_args():
     parser.add_argument("--train-dir", default="data/split/train")
     parser.add_argument("--val-dir", default="data/split/val")
     parser.add_argument("--test-dir", default="data/split/test")
-    parser.add_argument("--model-name", default="fruit_cnn", choices=["fruit_cnn", "simple_dense"])
+    parser.add_argument("--model-name", default="fruit_cnn", choices=["fruit_cnn", "simple_dense", "resnet18"])
     parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--learning-rate", type=float, default=3e-4)
@@ -44,12 +44,20 @@ def parse_args():
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--use-class-weights", action="store_true", default=True)
+    # Inverted flag: argparse's store_true can only express "default False, flip to
+    # True" — freezing is the common case, so this flips the other way instead.
+    parser.add_argument("--unfreeze-backbone", action="store_true", default=False)
     parser.add_argument("--output", default="models/checkpoints/best_model.pt")
-    parser.add_argument("--metrics-output", default="reports/parcial_2/base_model_metrics.json")
-    parser.add_argument("--curves-output", default="reports/parcial_2/base_model_curves.png")
+    # Not tied to a specific parcial's reports/ folder: --model-name now spans
+    # multiple stages (fruit_cnn for Parcial 2, resnet18 for Parcial 3), and every
+    # real caller (scripts/tune.py, the Colab notebooks) already passes explicit
+    # paths — these generic defaults just avoid silently overwriting another
+    # stage's committed results if main.py is ever run ad hoc without them.
+    parser.add_argument("--metrics-output", default="reports/last_run_metrics.json")
+    parser.add_argument("--curves-output", default="reports/last_run_curves.png")
     parser.add_argument(
         "--confusion-matrix-output",
-        default="reports/parcial_2/base_model_confusion_matrix.png",
+        default="reports/last_run_confusion_matrix.png",
     )
     return parser.parse_args()
 
@@ -94,12 +102,14 @@ def run_training(args) -> dict:
     class_names = train_dataset.classes
     print(f"Detected classes: {class_names}")
 
+    freeze_backbone = not getattr(args, "unfreeze_backbone", False)
     model = build_model(
         model_name=args.model_name,
         num_classes=len(class_names),
         activation=args.activation,
         dropout_rate=args.dropout_rate,
         base_channels=args.base_channels,
+        freeze_backbone=freeze_backbone,
     )
 
     class_weights = None
@@ -110,7 +120,9 @@ def run_training(args) -> dict:
     loss_function = get_loss_function("cross_entropy", weight=class_weights, device=device)
     optimizer = get_optimizer(
         name="adamw",
-        parameters=model.parameters(),
+        # Frozen backbones (e.g. resnet18) have params with requires_grad=False;
+        # a no-op filter for every other model, whose params are all trainable.
+        parameters=filter(lambda p: p.requires_grad, model.parameters()),
         learning_rate=args.learning_rate,
         weight_decay=args.weight_decay,
     )
@@ -151,6 +163,7 @@ def run_training(args) -> dict:
                     "activation": args.activation,
                     "dropout_rate": args.dropout_rate,
                     "base_channels": args.base_channels,
+                    "freeze_backbone": freeze_backbone,
                     "validation_loss": val_loss,
                     "validation_accuracy": val_acc,
                 },
@@ -193,6 +206,7 @@ def run_training(args) -> dict:
             "activation": args.activation,
             "dropout_rate": args.dropout_rate,
             "base_channels": args.base_channels,
+            "freeze_backbone": freeze_backbone,
             "learning_rate": args.learning_rate,
             "weight_decay": args.weight_decay,
             "batch_size": args.batch_size,
