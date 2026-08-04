@@ -62,7 +62,7 @@ These characteristics are useful for future image classification work.
 ## Repository Structure
 
 ```text
-fruit-classification-ai/
+fruits-classifier/
 |
 |-- README.md
 |-- requirements.txt
@@ -282,7 +282,7 @@ Trained via [`notebooks/03_Transfer_Learning_and_Demo.ipynb`](fruit_neural_netwo
 |---|---:|---:|---:|---:|
 | CNN Base (Parcial 2, from scratch) | 0.5429 | 0.5513 | 0.5429 | 0.5122 |
 | CNN Tuned (Parcial 2, Optuna) | 0.6100 | 0.6037 | 0.6100 | 0.6000 |
-| ResNet18 (frozen backbone) | 0.8445 | 0.8437 | 0.8445 | 0.8438 |
+| ResNet18 (frozen backbone) | 0.8445 | 0.8437 | 0.8445 | 0.8439 |
 | **ResNet18 (fine-tuned, unfrozen)** | **0.9143** | **0.9145** | **0.9143** | **0.9139** |
 
 The frozen-backbone run took ~6 minutes (15 epochs, no early stop) and already improved +23.5 points over the best Parcial 2 model. Unfreezing the backbone with a lower learning rate (`1e-4` vs. `1e-3`) pushed accuracy to 91.4% before early stopping triggered at epoch 7 (validation loss stopped improving after epoch 2, at which point training accuracy kept climbing — a sign of the model starting to overfit, correctly caught by `EarlyStopping`).
