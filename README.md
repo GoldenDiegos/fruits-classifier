@@ -293,13 +293,8 @@ The frozen-backbone run took ~6 minutes (15 epochs, no early stop) and already i
 
 Tested with a real photo (not from the training dataset) of two bananas on a blue surface: correctly classified as Banana with 65% confidence (Mango was the second guess at 26%, a reasonable confusion given similar shape/color).
 
-## Presentation
-
-Slide-by-slide content covering both Parcial 2 and Parcial 3 is in [`fruit_neural_network_project/project/reports/presentation_parcial2_3.md`](fruit_neural_network_project/project/reports/presentation_parcial2_3.md).
-
 ## Parcial 3 Status
 
 - ResNet18 transfer learning (both frozen and fine-tuned) implemented, tested, and executed end-to-end on the real dataset in Google Colab with GPU.
 - Applicable use case (Gradio demo) implemented, tested locally against the existing `tuned_model.pt`, and verified with a real (non-dataset) photo during the Colab run.
-- Presentation content written with real results (no pending placeholders).
 - Final exported checkpoint: [`fruit_neural_network_project/project/models/checkpoints/resnet18_finetuned_model.pt`](fruit_neural_network_project/project/models/checkpoints/resnet18_finetuned_model.pt).
