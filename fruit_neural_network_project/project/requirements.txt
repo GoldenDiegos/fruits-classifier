@@ -13,3 +13,4 @@ mlflow
 optuna
 fastapi
 uvicorn
+gradio
