@@ -1,7 +1,7 @@
 """Single-image inference utilities."""
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 import torch
 from PIL import Image
@@ -11,26 +11,37 @@ from models.model_factory import build_model
 
 
 class FruitPredictor:
-    """Load a trained model and predict one image."""
+    """Load a trained model and predict one image.
 
-    def __init__(
-        self,
-        model_path: str,
-        class_names: List[str],
-        model_name: str = "fruit_cnn",
-        device: str = "cpu",
-    ) -> None:
+    The model architecture is reconstructed entirely from the checkpoint's own
+    `metadata` (class names, model name, and every architecture hyperparameter),
+    so a checkpoint always loads with the exact configuration it was trained
+    with instead of the caller having to know/pass it.
+    """
+
+    def __init__(self, model_path: str, device: str = "cpu") -> None:
         self.device = torch.device(device)
-        self.class_names = class_names
 
-        self.model = build_model(model_name=model_name, num_classes=len(class_names))
         checkpoint = torch.load(model_path, map_location=self.device)
+        if "metadata" not in checkpoint:
+            raise ValueError(f"Checkpoint at {model_path} is missing metadata.")
+        metadata = checkpoint["metadata"]
 
-        if "model_state_dict" in checkpoint:
-            self.model.load_state_dict(checkpoint["model_state_dict"])
-        else:
-            self.model.load_state_dict(checkpoint)
+        self.class_names = metadata["class_names"]
 
+        self.model = build_model(
+            model_name=metadata.get("model_name", "fruit_cnn"),
+            num_classes=len(self.class_names),
+            activation=metadata.get("activation", "relu"),
+            dropout_rate=metadata.get("dropout_rate", 0.3),
+            base_channels=metadata.get("base_channels", 8),
+            # Only affects the optimizer during training, not inference correctness.
+            freeze_backbone=metadata.get("freeze_backbone", True),
+            # The real trained weights come from the checkpoint right below, so
+            # there's no need to also download ImageNet weights just to overwrite them.
+            pretrained=False,
+        )
+        self.model.load_state_dict(checkpoint["model_state_dict"])
         self.model.to(self.device)
         self.model.eval()
 
